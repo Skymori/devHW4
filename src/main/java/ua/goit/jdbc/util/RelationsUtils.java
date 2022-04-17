@@ -17,15 +17,31 @@ import java.util.List;
 
 public class RelationsUtils {
     private static final DatabaseManagerConnection CONNECTION_MANAGER;
-
+    private static final String getAllProjectsForCompany = "SELECT p.project_id, p.name, p.description, p.cost, p.creation_date FROM projects p, companies c, companies_projects cp " +
+            "WHERE p.project_id=cp.project_id AND c.company_id=cp.company_id AND c.company_id=?";
+    private static final String getAllProjectsForCustomer = "SELECT p.project_id, p.name, p.description, p.cost, p.creation_date  FROM projects p, customers c, customers_projects cp " +
+            "WHERE p.project_id=cp.project_id AND c.customer_id=cp.customer_id AND c.customer_id=?";
+    private static final String getAllProjectsForDeveloper = "SELECT p.project_id, p.name, p.description, p.cost, p.creation_date  FROM projects p, developers d, developers_projects dp " +
+            "WHERE p.project_id=dp.project_id AND d.developer_id=dp.developer_id AND d.developer_id=?";
+    private static final String getAllSkillsForDeveloper = "SELECT s.skill_id, s.language, s.level FROM skills s, developers d, developers_skills ds " +
+            "WHERE s.skill_id=ds.skill_id AND d.developer_id=ds.developer_id AND d.developer_id=?";
+    private static final String getAllCompaniesForProject = "SELECT c.company_id, c.name, c.city FROM companies c, projects p, companies_projects cp " +
+            "WHERE c.company_id=cp.company_id AND p.project_id=cp.project_id AND p.project_id=?";
+    private static final String getCustomerForProject = "SELECT c.customer_id, c.name, c.city FROM customers c, projects p, customers_projects cp " +
+            "WHERE c.customer_id=cp.customer_id AND p.project_id=cp.project_id AND p.project_id=?";
+    private static final String getAllDevelopersForProject = "SELECT d.developer_id, d.name, d.age, d.sex, d.company_id, d.salary FROM developers d, projects p, developers_projects dp " +
+            "WHERE p.project_id=dp.project_id AND d.developer_id=dp.developer_id AND p.project_id=?";
+    private static final String getAllDevelopersWithSkillLanguage = "SELECT d.developer_id, d.name, d.age, d.sex, d.company_id, d.salary FROM developers d, skills s, developers_skills ds " +
+            "WHERE d.developer_id = ds.developer_id AND s.skill_id=ds.skill_id AND s.language=?::language_choice";
+    private static final String getAllDevelopersWithSkillLevel = "SELECT d.developer_id, d.name, d.age, d.sex, d.company_id, d.salary FROM developers d, skills s, developers_skills ds" +
+            " WHERE d.developer_id = ds.developer_id AND s.skill_id=ds.skill_id AND s.level=?::level_choice";
     static {
         PropertiesConfig propertiesConfig = new PropertiesConfig("application.properties");
         CONNECTION_MANAGER = new DatabaseManagerConnection(propertiesConfig);
     }
 
     public static List<ProjectDAO> getAllProjectsForCompany(int companyId) {
-        String getAllProjectsForCompany = "SELECT p.project_id, p.name, p.description, p.cost, p.creation_date FROM projects p, companies c, companies_projects cp " +
-                "WHERE p.project_id=cp.project_id AND c.company_id=cp.company_id AND c.company_id=?";
+
         List<ProjectDAO> projects = new ArrayList<>();
         try (Connection connection = CONNECTION_MANAGER.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(getAllProjectsForCompany)) {
@@ -43,8 +59,7 @@ public class RelationsUtils {
     }
 
     public static List<ProjectDAO> getAllProjectsForCustomer(int customerId) {
-        String getAllProjectsForCustomer = "SELECT p.project_id, p.name, p.description, p.cost, p.creation_date  FROM projects p, customers c, customers_projects cp " +
-                "WHERE p.project_id=cp.project_id AND c.customer_id=cp.customer_id AND c.customer_id=?";
+
         List<ProjectDAO> projects = new ArrayList<>();
         try (Connection connection = CONNECTION_MANAGER.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(getAllProjectsForCustomer)) {
@@ -67,8 +82,7 @@ public class RelationsUtils {
     }
 
     public static List<ProjectDAO> getAllProjectsForDeveloper(int developerId) {
-        String getAllProjectsForDeveloper = "SELECT p.project_id, p.name, p.description, p.cost, p.creation_date  FROM projects p, developers d, developers_projects dp " +
-                "WHERE p.project_id=dp.project_id AND d.developer_id=dp.developer_id AND d.developer_id=?";
+
         List<ProjectDAO> projects = new ArrayList<>();
         try (Connection connection = CONNECTION_MANAGER.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(getAllProjectsForDeveloper)) {
@@ -86,8 +100,7 @@ public class RelationsUtils {
     }
 
     public static List<SkillDAO> getAllSkillsForDeveloper(int developerId) {
-        String getAllSkillsForDeveloper = "SELECT s.skill_id, s.language, s.level FROM skills s, developers d, developers_skills ds " +
-                "WHERE s.skill_id=ds.skill_id AND d.developer_id=ds.developer_id AND d.developer_id=?";
+
         List<SkillDAO> skills = new ArrayList<>();
         try (Connection connection = CONNECTION_MANAGER.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(getAllSkillsForDeveloper)) {
@@ -105,8 +118,7 @@ public class RelationsUtils {
     }
 
     public static List<CompanyDAO> getAllCompaniesForProject(int projectId) {
-        String getAllCompaniesForProject = "SELECT c.company_id, c.name, c.city FROM companies c, projects p, companies_projects cp " +
-                "WHERE c.company_id=cp.company_id AND p.project_id=cp.project_id AND p.project_id=?";
+
         List<CompanyDAO> companies = new ArrayList<>();
         try (Connection connection = CONNECTION_MANAGER.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(getAllCompaniesForProject)) {
@@ -124,8 +136,7 @@ public class RelationsUtils {
     }
 
     public static List<CustomerDAO> getCustomerForProject(int projectId) {
-        String getCustomerForProject = "SELECT c.customer_id, c.name, c.city FROM customers c, projects p, customers_projects cp " +
-                "WHERE c.customer_id=cp.customer_id AND p.project_id=cp.project_id AND p.project_id=?";
+
         List<CustomerDAO> customers = new ArrayList<>();
         try (Connection connection = CONNECTION_MANAGER.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(getCustomerForProject)) {
@@ -143,8 +154,7 @@ public class RelationsUtils {
     }
 
     public static List<DeveloperDAO> getAllDevelopersForProject(int projectId) {
-        String getAllDevelopersForProject = "SELECT d.developer_id, d.name, d.age, d.sex, d.id_company, d.salary FROM developers d, projects p, developers_projects dp " +
-                "WHERE p.project_id=dp.project_id AND d.developer_id=dp.developer_id AND p.project_id=?";
+
         List<DeveloperDAO> developerDAOS = new ArrayList<>();
         try (Connection connection = CONNECTION_MANAGER.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(getAllDevelopersForProject)) {
@@ -162,8 +172,7 @@ public class RelationsUtils {
     }
 
     public static List<DeveloperDAO> getAllDevelopersWithSkillLanguage(String skillLanguage) {
-        String getAllDevelopersWithSkillLanguage = "SELECT d.developer_id, d.name, d.age, d.sex, d.company_id, d.salary FROM developers d, skills s, developers_skills ds " +
-                "WHERE d.developer_id = ds.developer_id AND s.skill_id=ds.skill_id AND s.language=?::language_choice";
+
         List<DeveloperDAO> developerDAOS = new ArrayList<>();
         try (Connection connection = CONNECTION_MANAGER.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(getAllDevelopersWithSkillLanguage)) {
@@ -181,8 +190,7 @@ public class RelationsUtils {
     }
 
     public static List<DeveloperDAO> getAllDevelopersWithSkillLevel(String skillLevel) {
-        String getAllDevelopersWithSkillLevel = "SELECT d.developer_id, d.name, d.age, d.sex, d.id_company, d.salary FROM developers d, skills s, developers_skills ds" +
-                " WHERE d.developer_id = ds.developer_id AND s.skill_id=ds.skill_id AND s.level=?::level_choice";
+
         List<DeveloperDAO> developerDAOS = new ArrayList<>();
         try (Connection connection = CONNECTION_MANAGER.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(getAllDevelopersWithSkillLevel)) {
