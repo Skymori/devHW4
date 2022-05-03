@@ -121,7 +121,7 @@ public class CompanyRepository implements Repository<CompanyDAO> {
              PreparedStatement preparedStatement = connection.prepareStatement(GET_LIST_OF_VALID_INDEXES)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                indexes.add(resultSet.getInt("id_company"));
+                indexes.add(resultSet.getInt("company_id"));
             }
             return indexes;
         } catch (SQLException e) {

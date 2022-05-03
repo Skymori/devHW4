@@ -254,7 +254,7 @@ public class CommandProcessor {
     private int getIdFromUserForProject() {
         List<Integer> listOfValidIndexesForProject = commandUtil.getListOfValidIndexesForProject();
         if (!listOfValidIndexesForProject.isEmpty()) {
-            view.write("Please enter the id of the project from the list: " + listOfValidIndexesForProject.toString());
+            view.write("Please enter the id of the project from the list: " + listOfValidIndexesForProject);
             return getIntegerFromConsole(view.read(), listOfValidIndexesForProject);
         } else {
             view.write("There are no projects in the database available");
@@ -265,7 +265,7 @@ public class CommandProcessor {
     private int getIdFromUserForDeveloper() {
         List<Integer> listOfValidIndexesForDeveloper = commandUtil.getListOfValidIndexesForDeveloper();
         if (!listOfValidIndexesForDeveloper.isEmpty()) {
-            view.write("Please enter the id of the developer from the list: " + listOfValidIndexesForDeveloper.toString());
+            view.write("Please enter the id of the developer from the list: " + listOfValidIndexesForDeveloper);
             return getIntegerFromConsole(view.read(), listOfValidIndexesForDeveloper);
         } else {
             view.write("There are no developers in the database available");
@@ -276,7 +276,7 @@ public class CommandProcessor {
     private int getIdFromUserForCompany() {
         List<Integer> listOfValidIndexesForCompany = commandUtil.getListOfValidIndexesForCompany();
         if (!listOfValidIndexesForCompany.isEmpty()) {
-            view.write("Please enter the id of the company from the list: " + listOfValidIndexesForCompany.toString());
+            view.write("Please enter the id of the company from the list: " + listOfValidIndexesForCompany);
             return getIntegerFromConsole(view.read(), listOfValidIndexesForCompany);
         } else {
             view.write("There are no developers in the database available");
